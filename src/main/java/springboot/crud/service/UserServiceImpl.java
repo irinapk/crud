@@ -16,6 +16,10 @@ public class UserServiceImpl implements UserService {
     @Autowired
     public UserServiceImpl (UserDao userDao) { this.userDao = userDao; }
 
+    public UserServiceImpl() {
+
+    }
+
     @Transactional
     @Override
     public void saveUser(User user) {

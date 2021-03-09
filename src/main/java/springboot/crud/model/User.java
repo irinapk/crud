@@ -4,6 +4,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.util.Collection;
@@ -22,11 +24,20 @@ public class User implements UserDetails {
     @Column(name = "name", unique = true)
     private String name;
 
-    @NotEmpty(message = "Lat name cannot be empty")
+    @NotEmpty(message = "Last name cannot be empty")
     @Size(min = 2, max = 30, message = "Last name should consist of 2 to 30 characters")
     @Column(name = "last_name")
     private String lastName;
 
+    @Min(1)
+    @Column(name = "age")
+    private int age;
+
+    @NotEmpty(message = "Email name cannot be empty")
+    @Email(message = "Wrong e-mail")
+    @Size(min = 2, max = 50, message = "Email can consist of 2 to 50 characters")
+    @Column(name = "email")
+    private String email;
 
     @NotEmpty(message = "Last name cannot be empty")
     @Size(min = 1, max = 30, message = "Password should contain at least one character")
@@ -47,6 +58,13 @@ public class User implements UserDetails {
     public User(String name, String lastName) {
         this.name = name;
         this.lastName = lastName;
+    }
+
+    public User(String name, String lastName, int age, String email) {
+        this.name = name;
+        this.lastName = lastName;
+        this.age = age;
+        this.email = email;
     }
 
     public User() {
@@ -127,5 +145,21 @@ public class User implements UserDetails {
 
     public void setRoles (Set<Role> roles) {
         this.roles = roles;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }
