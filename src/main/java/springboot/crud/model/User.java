@@ -9,6 +9,8 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 @Entity
@@ -161,5 +163,14 @@ public class User implements UserDetails {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getUserRoles () {
+        Set<String> roleSet = new HashSet<>();
+        Iterator i = this.roles.iterator();
+        for (Role role : this.roles) {
+            roleSet.add(role.toString());
+        }
+        return String.join(", ", roleSet);
     }
 }

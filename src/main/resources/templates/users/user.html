@@ -1,29 +1,138 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<style>
+    .background1 {
+        background-color: white;
+    }
+
+    .background2 {
+        background-color: #F8F9FA;
+    }
+
+    nav .navbar-nav.mr-auto.mt-2 .nav-item .nav-link{
+        color: #ffffff;
+    }
+</style>
+
 <head>
     <meta charset="UTF-8">
-    <title>User Page</title>
-</head>
-<body>
-    <div>
-        <h3>Welcome to your personal page! </h3>
-    </div>
-    <text><b>User ID: </b></text>
-    <p th:text="${user.getId()}">VALUE</p>
-    <text><b>User name: </b></text>
-    <p th:text="${user.getName}">VALUE</p>
-    <text><b>User surname: </b></text>
-    <p th:text="${user.getLastName()}">VALUE</p>
-    <text><b>User age: </b></text>
-    <p th:text="${user.getAge()}">VALUE</p>
-    <text><b>User e-mail: </b></text>
-    <p th:text="${user.getEmail()}">VALUE</p>
-    <text><b>Assigned roles: </b></text>
-    <p th:text="${user.getRoles()}">VALUE</p>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>User information</title>
 
-    <br/>
-    <form th:action="@{/logout}" method="post">
-        <input type="submit" value="Logout"/>
-    </form>
+    <link rel="stylesheet" type="text/css"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+
+<body>
+
+<!--    TOP NAVIGATION BAR AND LOGOUT BUTTON -->
+
+<nav class="navbar navbar-dark bg-dark navbar-static-top">
+    <div class="navbar-text text-left">
+        <b><span class="text-white" th:text="${#authentication.getPrincipal().getName()}"></span></b>
+        <span class="text-white">with roles: </span>
+        <span class="text-white" th:text="${#authentication.getPrincipal().getUserRoles()}"></span>
+    </div>
+    <ul class="navbar-nav navbar-right">
+        <li th:if="${#authorization.expression('isAuthenticated()')}">
+            <a class="nav-link"  href="/logout" th:href="@{#}" onclick="$('#form').submit();">
+                <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>&nbsp;Logout
+            </a>
+            <form style="visibility: hidden" id="form" method="post" action="#" th:action="@{/logout}"></form>
+        </li>
+    </ul>
+</nav>
+<br/>
+
+<div class="row">
+
+    <!--    SIDEBAR NAVIGATION MENU-->
+
+    <div class="col-md-2 w-25 background1">
+        <div class="list-group" id="list-tab" role="tablist">
+            <a class="list-group-item list-group-item-action active" id="list-user-list" data-toggle="list" href="#user-page"
+               role="tab" aria-controls="user">User</a>
+        </div>
+    </div>
+
+    <!--    USER INFO PAGE -->
+    <div class="col-md-10 w-75 background2">
+        <div class="tab-content flex-center">
+            <div id="user-page" role="tabpanel" class="tab-pane active">
+                <div class="container-fluid">
+                    <div>
+                        <h2>User information page</h2>
+                    </div>
+
+                    <div class="tab-content background1">
+                        <div class="tab-pane active" role="tabpanel" id="user-info">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <nav class="navbar navbar-light bg-light" style="border:1px solid #cecece;">
+                                        <a class="navbar-brand" href="#!">About user</a>
+                                    </nav>
+                                    <div class="container-fluid" style="border:1px solid #cecece;">
+                                        <br/>
+                                        <table class="table table-striped">
+                                            <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>First Name</th>
+                                                <th>Last Name</th>
+                                                <th>Age</th>
+                                                <th>Email</th>
+                                                <th>Role</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr>
+                                                <td><span
+                                                        th:text="${#authentication.getPrincipal().getId()}"> ID </span>
+                                                </td>
+                                                <td><span
+                                                        th:text="${#authentication.getPrincipal().getName()}"> First Name </span>
+                                                </td>
+                                                <td><span
+                                                        th:text="${#authentication.getPrincipal().getLastName()}"> Last Name </span>
+                                                </td>
+                                                <td><span
+                                                        th:text="${#authentication.getPrincipal().getAge()}"> Age </span>
+                                                </td>
+                                                <td><span
+                                                        th:text="${#authentication.getPrincipal().getEmail()}"> Email </span>
+                                                </td>
+                                                <td><span
+                                                        th:text="${#authentication.getPrincipal().getUserRoles()}"> Role </span>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+
 </body>
 </html>

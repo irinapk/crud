@@ -40,6 +40,8 @@ public class AuthConfiguration extends WebSecurityConfigurerAdapter {
                 .and().formLogin()
                 .successHandler(successUserHandler);
 
+        http.csrf().disable();
+
     }
 
     @Bean

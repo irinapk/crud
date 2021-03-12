@@ -38,8 +38,58 @@ public class UserController {
     @GetMapping("/admin")
     public String viewAdminPage(Model model) {
         model.addAttribute("users", userDao.getAllUsers());
+        model.addAttribute("user", new User());
+        model.addAttribute("updateUser", new User());
+        Set<Role> roles = roleDao.showAllRoles();
+        model.addAttribute("allRoles", roles);
         return "users/admin";
     }
+
+    @PostMapping("/admin")
+    public String createNewUser (@ModelAttribute("user") @Valid springboot.crud.model.User user,
+                                 @RequestParam(value="roleID") int[] roleID,
+                                 BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "users/admin";
+        }
+        Set<Role> roleSet = new HashSet<>();
+        for (int i = 0; i < roleID.length; i++) {
+            roleSet.add(roleDao.findRoleById(roleID[i]));
+        }
+        user.setRoles(roleSet);
+        userDao.saveUser(user);
+        return "redirect:/admin";
+    }
+
+    @DeleteMapping("/admin")
+    public String deleteUser(@RequestParam("userID") String userID) {
+        int id = Integer.valueOf(userID);
+        userDao.removeUserById(id);
+        return "redirect:/admin";
+    }
+
+    @GetMapping("admin/{id}")
+    public String showUserToUpdate (@PathVariable("id") int id, Model model) {
+        model.addAttribute("user", userDao.show(id));
+        return "redirect:/admin";
+    }
+
+    @PostMapping ("/admin/{id}")
+    public String updateUser (@ModelAttribute("user") @Valid springboot.crud.model.User user,
+                         @RequestParam(value="roleID") int[] roleID,
+                         BindingResult bindingResult, @PathVariable("id") int id) {
+        if (bindingResult.hasErrors()) {
+            return "users/admin";
+        }
+        Set<Role> roleSet = new HashSet<>();
+        for (int i = 0; i < roleID.length; i++) {
+            roleSet.add(roleDao.findRoleById(roleID[i]));
+        }
+        user.setRoles(roleSet);
+        userDao.update(user);
+        return "redirect:/admin";
+    }
+
 
     //ADMIN USER VIEW PAGE
     @GetMapping("user/{id}")
