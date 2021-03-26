@@ -32,8 +32,7 @@ public class MyRestController {
 
     @GetMapping("/users/{id}")
     public User getUser(@PathVariable int id) {
-        User user = userService.getUserById(id);
-        return user;
+        return userService.getUserById(id);
     }
 
     // required JSON body input: { "name": "Name",
@@ -44,17 +43,17 @@ public class MyRestController {
     //        "roles" : 1 ,2 }
 
     @PostMapping("/users/save")
-    public User addNewUser(@RequestBody Map<String, Object> jsonMap) {
+    public User addNewUser(@RequestBody Map<String, String> jsonMap) {
         User user = new User();
         Set<Role> roles = new HashSet<>();
-        user.setName(jsonMap.get("name").toString());
-        user.setLastName(jsonMap.get("lastName").toString());
-        user.setAge(Integer.valueOf(jsonMap.get("age").toString()));
-        user.setEmail(jsonMap.get("email").toString());
-        user.setPassword(jsonMap.get("password").toString());
-        String[] roleID = (jsonMap.get("roles").toString()).split(",");
-        for (int i = 0; i < roleID.length; i++) {
-            roles.add(roleService.findRoleById(Integer.valueOf((roleID[i]))));
+        user.setName(jsonMap.get("name"));
+        user.setLastName(jsonMap.get("lastName"));
+        user.setAge(Integer.parseInt(jsonMap.get("age")));
+        user.setEmail(jsonMap.get("email"));
+        user.setPassword(jsonMap.get("password"));
+        String[] roleID = (jsonMap.get("roles")).split(",");
+        for (String s : roleID) {
+            roles.add(roleService.findRoleById(Integer.parseInt(s)));
         }
         user.setRoles(roles);
         userService.saveUser(user);
@@ -62,17 +61,17 @@ public class MyRestController {
     }
 
     @PostMapping ("/users/update/{id}")
-    public User updateUser (@PathVariable int id, @RequestBody Map<String, Object> jsonMap) {
+    public User updateUser (@PathVariable int id, @RequestBody Map<String, String> jsonMap) {
         User user = userService.getUserById(id);
         Set<Role> roles = new HashSet<>();
-        user.setName(jsonMap.get("name").toString());
-        user.setLastName(jsonMap.get("lastName").toString());
-        user.setAge(Integer.valueOf(jsonMap.get("age").toString()));
-        user.setEmail(jsonMap.get("email").toString());
-        user.setPassword(jsonMap.get("password").toString());
-        String[] roleID = (jsonMap.get("roles").toString()).split(",");
-        for (int i = 0; i < roleID.length; i++) {
-            roles.add(roleService.findRoleById(Integer.valueOf((roleID[i]))));
+        user.setName(jsonMap.get("name"));
+        user.setLastName(jsonMap.get("lastName"));
+        user.setAge(Integer.parseInt(jsonMap.get("age")));
+        user.setEmail(jsonMap.get("email"));
+        user.setPassword(jsonMap.get("password"));
+        String[] roleID = (jsonMap.get("roles")).split(",");
+        for (String s : roleID) {
+            roles.add(roleService.findRoleById(Integer.parseInt(s)));
         }
         user.setRoles(roles);
         userService.update(user);
