@@ -18,11 +18,11 @@ public class AuthConfiguration extends WebSecurityConfigurerAdapter {
 
 
     private final UserDetailsService userDetailsService;
-    private final LoginSuccessHandler successUserHandler;
+     private final LoginSuccessHandler successUserHandler;
 
     public AuthConfiguration (@Qualifier("userDetailsServiceImpl") UserDetailsService userDetailsService, LoginSuccessHandler successUserHandler) {
         this.userDetailsService = userDetailsService;
-        this.successUserHandler = successUserHandler;
+         this.successUserHandler = successUserHandler;
     }
 
     @Autowired
@@ -34,8 +34,8 @@ public class AuthConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
 
         http.authorizeRequests()
-                .antMatchers("/users/show").permitAll() // доступность всем
-                .antMatchers("/users/admin").access("hasRole('ADMIN') and not( hasRole('USER'))")
+                .antMatchers("/admin").access("hasRole('ADMIN')")
+                .antMatchers("/user").access("hasAnyRole('ADMIN','USER')")
                 .anyRequest().fullyAuthenticated()
                 .and().formLogin()
                 .successHandler(successUserHandler);

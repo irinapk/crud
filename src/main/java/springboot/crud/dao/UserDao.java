@@ -13,7 +13,7 @@ public interface UserDao {
 
     void update(User newUser);
 
-    User show(int id);
+    User getUserById(int id);
 
     User getUserByName (String username);
 
